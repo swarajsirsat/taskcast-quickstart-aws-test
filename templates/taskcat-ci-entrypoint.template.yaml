@@ -147,6 +147,7 @@ Resources:
   Secrets:
     Type: AWS::SecretsManager::Secret
     Properties:
+      Name: taskcast-quickstart-aws
       Description: TaskCat CI secrets.
       SecretString: !Sub >-
         {
