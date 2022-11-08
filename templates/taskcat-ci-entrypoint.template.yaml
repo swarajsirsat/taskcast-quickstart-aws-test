@@ -213,32 +213,6 @@ Resources:
       Role: !GetAtt GitMergeRole.Arn
       Runtime: python3.9
       Timeout: 30
-  VPC:
-    Type: "AWS::EC2::VPC"
-    Properties:
-      CidrBlock: "10.0.0.0/16"
-  SubnetA:
-    Type: "AWS::EC2::Subnet"
-    Properties:
-      AvailabilityZone: !Select 
-        - 0
-        - !GetAZs 
-          Ref: 'AWS::Region'
-      VpcId: !Ref "VPC"
-      CidrBlock: "10.0.0.0/24"
-  SubnetB:
-    Type: "AWS::EC2::Subnet"
-    Properties:
-      AvailabilityZone: !Select 
-        - 1
-        - !GetAZs 
-          Ref: 'AWS::Region'
-      VpcId: !Ref "VPC"
-      CidrBlock: "10.0.1.0/24"
-  RouteTable:
-    Type: "AWS::EC2::RouteTable"
-    Properties:
-      VpcId: !Ref "VPC"
   CodeBuildServiceRole:
     Type: AWS::IAM::Role
     Properties:
