@@ -147,7 +147,6 @@ Resources:
   Secrets:
     Type: AWS::SecretsManager::Secret
     Properties:
-      Name: taskcast-quickstart-aws
       Description: TaskCat CI secrets.
       SecretString: !Sub >-
         {
@@ -214,6 +213,32 @@ Resources:
       Role: !GetAtt GitMergeRole.Arn
       Runtime: python3.9
       Timeout: 30
+  VPC:
+    Type: "AWS::EC2::VPC"
+    Properties:
+      CidrBlock: "10.0.0.0/16"
+  SubnetA:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      AvailabilityZone: !Select 
+        - 0
+        - !GetAZs 
+          Ref: 'AWS::Region'
+      VpcId: !Ref "VPC"
+      CidrBlock: "10.0.0.0/24"
+  SubnetB:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      AvailabilityZone: !Select 
+        - 1
+        - !GetAZs 
+          Ref: 'AWS::Region'
+      VpcId: !Ref "VPC"
+      CidrBlock: "10.0.1.0/24"
+  RouteTable:
+    Type: "AWS::EC2::RouteTable"
+    Properties:
+      VpcId: !Ref "VPC"
   CodeBuildServiceRole:
     Type: AWS::IAM::Role
     Properties:
@@ -286,11 +311,14 @@ Resources:
                   fail_fast: false
                   minimum_pre_commit_version: 2.6.0
                   repos:
-                    - repo: https://github.com/aws-cloudformation/cfn-python-lint
-                      rev: v0.59.0
+                    - repo: https://github.com/aws-quickstart/qs-cfn-lint-rules
+                      rev: c837d01eeaf047a908893254c13cb1e8e610668f
                       hooks:
-                        - id: cfn-python-lint
+                        - id: qs-cfn-lint-wrapped
                           files: ^templates/.*
+                          args:
+                            - --format=pretty
+                          require_serial: true
                   EOF
             pre_build:
               commands:
@@ -495,3 +523,6 @@ Outputs:
   Postdeployment:
     Description: See the deployment guide for postdeployment steps.
     Value: https://fwd.aws/BrGzY?
+  VpcId:
+    Description: The VPC ID
+    Value: !Ref VPC
