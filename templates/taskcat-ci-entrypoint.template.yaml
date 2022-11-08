@@ -213,6 +213,20 @@ Resources:
       Role: !GetAtt GitMergeRole.Arn
       Runtime: python3.9
       Timeout: 30
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: AllowEC2Traffic
+      GroupDescription: Enable SSH access and HTTP access on the inbound port
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
   CodeBuildServiceRole:
     Type: AWS::IAM::Role
     Properties:
@@ -285,14 +299,11 @@ Resources:
                   fail_fast: false
                   minimum_pre_commit_version: 2.6.0
                   repos:
-                    - repo: https://github.com/aws-quickstart/qs-cfn-lint-rules
-                      rev: c837d01eeaf047a908893254c13cb1e8e610668f
+                    - repo: https://github.com/aws-cloudformation/cfn-python-lint
+                      rev: v0.59.0
                       hooks:
-                        - id: qs-cfn-lint-wrapped
+                        - id: cfn-python-lint
                           files: ^templates/.*
-                          args:
-                            - --format=pretty
-                          require_serial: true
                   EOF
             pre_build:
               commands:
@@ -497,6 +508,6 @@ Outputs:
   Postdeployment:
     Description: See the deployment guide for postdeployment steps.
     Value: https://fwd.aws/BrGzY?
-  VpcId:
-    Description: The VPC ID
-    Value: !Ref VPC
+  outputInstanceSecurityGroup:
+    Description: A reference to the created security group
+    Value: !Ref InstanceSecurityGroup
