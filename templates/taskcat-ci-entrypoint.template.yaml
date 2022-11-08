@@ -1,21 +1,8 @@
-AWSTemplateFormatVersion: 2010-09-09
-Description: >-
-  CloudFormation template for deploying a TaskCat CI/CD pipeline for testing changes to AWS CloudFormation templates stored in a GitHub repository. (qs-1ops82lkf)
-  InstanceSecurityGroup:
+Description: Create a VPC with a SG which references itself
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  sgtester:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupName: AllowEC2Traffic
-      GroupDescription: Enable SSH access and HTTP access on the inbound port
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: 22
-          ToPort: 22
-          CidrIp: 0.0.0.0/0
-Outputs:
-  outputInstanceSecurityGroup:
-    Description: A reference to the created security group
-    Value: !Ref InstanceSecurityGroup
+      GroupDescription: vpc tester sg
+      VpcId: vpc-0e3384da61ec95b4f
