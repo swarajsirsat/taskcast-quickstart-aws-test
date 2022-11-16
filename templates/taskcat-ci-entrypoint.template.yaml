@@ -4,5 +4,5 @@ Resources:
   sgtester:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: vpc-group tester sg
+      GroupDescription: vpc-group tester sgg
       VpcId: vpc-0e3384da61ec95b4f
