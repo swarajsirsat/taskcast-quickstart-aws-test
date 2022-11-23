@@ -1,19 +1,8 @@
 Description: Create a VPC with a SG which references itself
 AWSTemplateFormatVersion: '2010-09-09'
 Resources:
-   "InstanceSecurityGroup": {
-        "Type": "AWS::EC2::SecurityGroup",
-        "Properties": {
-          "GroupDescription": "Enable SSH access via port 22",
-          "SecurityGroupIngress": [
-            {
-              "IpProtocol": "tcp",
-              "FromPort": "22",
-              "ToPort": "22",
-              "CidrIp": {
-                "Ref": "SSHLocation"
-              }
-            }
-          ]
-        }
-      }
+   sgtester:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: vpc-group-td
+      VpcId: vpc-0e3384da61ec95b4f
